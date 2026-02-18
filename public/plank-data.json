@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-02-18T17:09:20.053Z",
+  "currentStatus": {
+    "date": "2026-02-18",
+    "confirmed": false
+  },
+  "dateRange": {
+    "start": "2026-02-16",
+    "end": "2026-02-18"
+  },
+  "summary": {
+    "currentStreak": 1,
+    "longestStreak": 1,
+    "totalPlanks": 1,
+    "trackedDays": 3
+  },
+  "days": [
+    {
+      "date": "2026-02-16",
+      "status": "done",
+      "didPlank": true,
+      "keepsStreak": true,
+      "isFuture": false,
+      "note": "First logged plank day",
+      "source": "log"
+    },
+    {
+      "date": "2026-02-17",
+      "status": "rest",
+      "didPlank": false,
+      "keepsStreak": true,
+      "isFuture": false,
+      "note": "Marked as a rest day; streak should continue",
+      "source": "log"
+    },
+    {
+      "date": "2026-02-18",
+      "status": "pending",
+      "didPlank": false,
+      "keepsStreak": false,
+      "isFuture": false,
+      "note": null,
+      "source": "status"
+    }
+  ]
+}

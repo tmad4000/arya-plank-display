@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arya Plank Display</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ctext y='86' font-size='92'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div class="ambient"></div>
+    <main class="app-shell">
+      <header class="hero">
+        <p class="eyebrow">Daily 9-minute mission</p>
+        <h1>Arya Plank Display</h1>
+        <p class="subtitle">A sweet little streak board for quick daily check-ins.</p>
+      </header>
+
+      <!-- Tab Navigation -->
+      <nav class="tab-nav" aria-label="View tabs">
+        <button class="tab-btn active" data-tab="plank">Plank Calendar</button>
+        <button class="tab-btn" data-tab="pet">Arya Pet</button>
+      </nav>
+
+      <!-- Plank Calendar Tab -->
+      <div id="tab-plank" class="tab-panel active">
+        <section class="stats" aria-label="Plank summary">
+          <article class="stat-card">
+            <p class="stat-label">Current Streak</p>
+            <p class="stat-value" id="current-streak">0</p>
+          </article>
+          <article class="stat-card">
+            <p class="stat-label">Longest Streak</p>
+            <p class="stat-value" id="longest-streak">0</p>
+          </article>
+          <article class="stat-card">
+            <p class="stat-label">Total Planks</p>
+            <p class="stat-value" id="total-planks">0</p>
+          </article>
+        </section>
+
+        <section class="calendar-wrap" aria-label="Plank calendar">
+          <div class="calendar-header">
+            <button id="prev-month" class="month-button" aria-label="Previous month">←</button>
+            <h2 id="month-title">Month</h2>
+            <button id="next-month" class="month-button" aria-label="Next month">→</button>
+          </div>
+          <div class="day-headings" id="day-headings"></div>
+          <div class="calendar-grid" id="calendar-grid"></div>
+        </section>
+
+        <section class="legend" aria-label="Legend">
+          <p><span class="pill done">✅ Done</span></p>
+          <p><span class="pill rest">🌿 Rest day</span></p>
+          <p><span class="pill muted">◻ Missed/Future</span></p>
+        </section>
+      </div>
+
+      <!-- Arya Pet Tab -->
+      <div id="tab-pet" class="tab-panel">
+        <div class="pet-container">
+          <div class="pet-avatar" id="pet-avatar"></div>
+          <p class="pet-name">Arya</p>
+          <p class="pet-mood" id="pet-mood"></p>
+        </div>
+
+        <div class="pet-stats">
+          <div class="pet-stat">
+            <div class="pet-stat-header">
+              <span class="pet-stat-icon">💪</span>
+              <span class="pet-stat-label">Strength</span>
+              <span class="pet-stat-value" id="pet-strength-val">0</span>
+            </div>
+            <div class="pet-bar">
+              <div class="pet-bar-fill strength-fill" id="pet-strength-bar"></div>
+            </div>
+            <p class="pet-stat-desc" id="pet-strength-desc">Builds with each plank. Atrophies over time without training.</p>
+          </div>
+
+          <div class="pet-stat">
+            <div class="pet-stat-header">
+              <span class="pet-stat-icon">🧠</span>
+              <span class="pet-stat-label">Memory</span>
+              <span class="pet-stat-value" id="pet-memory-val">—</span>
+            </div>
+            <div class="pet-bar">
+              <div class="pet-bar-fill memory-fill" id="pet-memory-bar"></div>
+            </div>
+            <p class="pet-stat-desc">Memories of special moments. Coming soon…</p>
+          </div>
+
+          <div class="pet-stat">
+            <div class="pet-stat-header">
+              <span class="pet-stat-icon">🌟</span>
+              <span class="pet-stat-label">Mood</span>
+              <span class="pet-stat-value" id="pet-mood-val">—</span>
+            </div>
+            <div class="pet-bar">
+              <div class="pet-bar-fill mood-fill" id="pet-mood-bar"></div>
+            </div>
+            <p class="pet-stat-desc">Inferred from conversations. Coming soon…</p>
+          </div>
+        </div>
+
+        <div class="pet-history" id="pet-history">
+          <h3>Training Log</h3>
+          <div class="pet-log" id="pet-log"></div>
+        </div>
+      </div>
+
+      <p class="updated" id="updated-at">Updated just now</p>
+
+      <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

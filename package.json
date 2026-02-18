@@ -1,0 +1,12 @@
+{
+  "name": "arya-plank-display",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate:data": "node scripts/generate-plank-data.mjs",
+    "dev": "npm run generate:data && node scripts/dev-server.mjs",
+    "build": "npm run generate:data && node scripts/build-static.mjs",
+    "preview": "node scripts/dev-server.mjs dist"
+  }
+}

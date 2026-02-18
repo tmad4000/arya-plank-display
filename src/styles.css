@@ -1,0 +1,642 @@
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;600;700&display=swap");
+
+:root {
+  --bg-top: #fff5ee;
+  --bg-bottom: #e3f6f1;
+  --panel: rgba(255, 255, 255, 0.78);
+  --panel-strong: rgba(255, 255, 255, 0.92);
+  --ink: #2e3d52;
+  --ink-soft: #6b7f96;
+  --mint: #9fe4b0;
+  --mint-strong: #48c980;
+  --cloud: #d9e3ea;
+  --peach: #ffd7b8;
+  --aqua: #a8e5ef;
+  --coral: #ff9a9e;
+  --lilac: #c3b1e1;
+  --sunshine: #ffe47a;
+  --shadow: 0 20px 44px rgba(79, 120, 145, 0.16);
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; min-height: 100%; }
+
+body {
+  font-family: "Nunito", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: linear-gradient(160deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+}
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 15% 12%, rgba(255, 196, 155, 0.5), transparent 38%),
+    radial-gradient(circle at 85% 15%, rgba(170, 223, 239, 0.45), transparent 42%),
+    radial-gradient(circle at 50% 88%, rgba(160, 229, 178, 0.38), transparent 40%),
+    radial-gradient(circle at 70% 60%, rgba(195, 177, 225, 0.22), transparent 35%);
+  z-index: -1;
+}
+
+.app-shell {
+  width: min(940px, 92vw);
+  margin: 1rem auto 2rem;
+  padding: 1.2rem;
+  border-radius: 36px;
+  background: var(--panel);
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  animation: rise 700ms ease;
+}
+
+.hero { text-align: center; margin-bottom: -0.3rem; }
+
+.eyebrow {
+  margin: 0;
+  letter-spacing: 0.1em;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+h1 {
+  margin: 0.15rem 0 0;
+  font-family: "Baloo 2", "Trebuchet MS", cursive;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 25%, #a8e6cf 50%, #88d8f9 75%, #c3b1e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  margin: 0.2rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+}
+
+/* --- Stats --- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+
+.stat-card {
+  background: var(--panel-strong);
+  border: 1.5px solid rgba(122, 183, 202, 0.25);
+  border-radius: 22px;
+  padding: 0.55rem 0.8rem;
+  text-align: center;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(90, 140, 165, 0.18);
+}
+
+.stat-label {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.stat-value {
+  margin: 0.15rem 0 0;
+  font-family: "Baloo 2", cursive;
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+  font-weight: 700;
+  background: linear-gradient(135deg, #48c980, #3ab0d6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Calendar --- */
+.calendar-wrap {
+  margin-top: 0.8rem;
+  padding: 0.8rem;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1.5px solid rgba(122, 183, 202, 0.2);
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.7rem;
+}
+
+.month-button {
+  border: 0;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  background: linear-gradient(140deg, #fff3e9, #ebfbf6);
+  color: #496079;
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(97, 123, 148, 0.14);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.month-button:hover {
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 12px 24px rgba(97, 123, 148, 0.2);
+}
+
+.month-button:active { transform: translateY(1px) scale(0.96); }
+
+h2 {
+  margin: 0;
+  font-family: "Baloo 2", "Trebuchet MS", cursive;
+  font-size: clamp(1.25rem, 2.5vw, 1.8rem);
+  font-weight: 700;
+}
+
+.day-headings,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.42rem;
+}
+
+.day-headings { margin-bottom: 0.42rem; }
+
+.day-heading {
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.day-cell {
+  min-height: 84px;
+  border-radius: 16px;
+  padding: 0.4rem 0.5rem;
+  border: 1.5px solid transparent;
+  background: rgba(255, 255, 255, 0.88);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.day-cell:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 12px 24px rgba(90, 120, 141, 0.14);
+}
+
+.day-cell.empty {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.day-cell.empty:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.day-number {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #4e6780;
+}
+
+.day-mark {
+  margin: 0.2rem 0 0;
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+/* Done cells - green with sparkle */
+.status-done {
+  border-color: rgba(70, 201, 126, 0.5);
+  background: linear-gradient(155deg, #edfff3, #d1f5dd);
+}
+
+.status-done .day-mark {
+  animation: pop 400ms ease;
+}
+
+.status-done::after {
+  content: "✨";
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 0.6rem;
+  opacity: 0.7;
+  animation: twinkle 2.5s ease-in-out infinite;
+}
+
+/* Rest cells - blue/teal */
+.status-rest {
+  border-color: rgba(131, 213, 225, 0.55);
+  background: linear-gradient(155deg, #eafaff, #d4f1ff);
+}
+
+/* Pending cell (today not yet confirmed) */
+.status-pending {
+  border-color: rgba(255, 228, 122, 0.7);
+  background: linear-gradient(155deg, #fffbeb, #fff3c4);
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.status-pending .day-number {
+  color: #b8860b;
+  font-weight: 800;
+}
+
+/* Missed / future / unknown */
+.status-missed,
+.status-future,
+.status-unknown {
+  border-color: rgba(206, 218, 227, 0.7);
+  background: linear-gradient(155deg, #f7fafc, #eef2f6);
+}
+
+/* Today highlight ring */
+.day-cell.is-today {
+  box-shadow: 0 0 0 2.5px rgba(255, 154, 158, 0.5), 0 8px 20px rgba(255, 154, 158, 0.15);
+}
+
+/* --- Legend --- */
+.legend {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.legend p { margin: 0; }
+
+.pill {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.38rem 0.72rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1.5px solid transparent;
+  transition: transform 140ms ease;
+}
+
+.pill:hover { transform: scale(1.06); }
+
+.pill.done {
+  background: #e4f9ec;
+  border-color: rgba(70, 201, 126, 0.4);
+}
+
+.pill.rest {
+  background: #e4f7fb;
+  border-color: rgba(131, 213, 225, 0.4);
+}
+
+.pill.muted {
+  background: #eef3f7;
+  border-color: rgba(188, 201, 210, 0.5);
+}
+
+.updated {
+  margin: 1.1rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.error {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0.75rem;
+  border-radius: 14px;
+  background: #fff2f2;
+  border: 1.5px solid #ffc7c7;
+  color: #8e3f3f;
+}
+
+/* --- Animations --- */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.25); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 228, 122, 0.3); }
+  50% { box-shadow: 0 0 18px rgba(255, 228, 122, 0.6); }
+}
+
+
+/* --- Tooltip bubble (tap on mobile, click on desktop) --- */
+.tooltip-bubble {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(46, 61, 82, 0.92);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+  animation: tip-in 200ms ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.tooltip-bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(46, 61, 82, 0.92);
+}
+
+@keyframes tip-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* --- Today label --- */
+.is-today .day-number {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #e05580;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* --- Responsive --- */
+@media (max-width: 740px) {
+  .app-shell {
+    margin: 0.8rem auto 2rem;
+    padding: 1rem;
+    border-radius: 24px;
+    width: min(940px, 96vw);
+  }
+
+  h1 { font-size: 1.8rem; }
+
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .stat-card { padding: 0.6rem 0.4rem; border-radius: 16px; }
+  .stat-label { font-size: 0.68rem; }
+  .stat-value { font-size: 1.3rem; }
+
+  .calendar-wrap { padding: 0.7rem; border-radius: 20px; }
+
+  .day-headings, .calendar-grid { gap: 0.28rem; }
+
+  .day-cell {
+    min-height: 52px;
+    border-radius: 12px;
+    padding: 0.25rem 0.3rem;
+  }
+
+  .day-number { font-size: 0.72rem; }
+  .day-mark { font-size: 1.15rem; margin-top: 0.1rem; }
+
+  .is-today .day-number { font-size: 0.58rem; }
+
+  .status-done::after { display: none; }
+
+  .month-button { width: 2rem; height: 2rem; font-size: 1rem; }
+  h2 { font-size: 1.1rem; }
+
+  .legend { gap: 0.35rem; }
+  .pill { font-size: 0.75rem; padding: 0.28rem 0.55rem; }
+}
+
+@media (max-width: 380px) {
+  .app-shell { padding: 0.7rem; margin: 0.5rem auto 1.5rem; }
+  .day-cell { min-height: 44px; padding: 0.2rem; }
+  .day-mark { font-size: 1rem; }
+  .day-number { font-size: 0.65rem; }
+  .stat-label { font-size: 0.6rem; }
+  .stat-value { font-size: 1.1rem; }
+}
+
+
+/* ---- Tab Navigation ---- */
+.tab-nav {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+  margin-bottom: 0.1rem;
+}
+
+.tab-btn {
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--ink-soft);
+  font-family: "Baloo 2", cursive;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.85);
+  transform: translateY(-1px);
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, #fff3e9, #ebfbf6);
+  border-color: rgba(122, 183, 202, 0.4);
+  color: var(--ink);
+  box-shadow: 0 4px 14px rgba(90, 140, 165, 0.15);
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ---- Pet Tab ---- */
+.pet-container {
+  text-align: center;
+  padding: 1.5rem 1rem 0.8rem;
+}
+
+.pet-avatar {
+  font-size: 4.5rem;
+  line-height: 1.1;
+  animation: pet-bounce 2s ease-in-out infinite;
+}
+
+@keyframes pet-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.pet-name {
+  margin: 0.3rem 0 0;
+  font-family: "Baloo 2", cursive;
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ff9a9e, #c3b1e1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pet-mood {
+  margin: 0.1rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.pet-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 0 1rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.pet-stat {
+  background: var(--panel-strong);
+  border-radius: 18px;
+  padding: 0.8rem 1rem;
+  border: 1.5px solid rgba(122, 183, 202, 0.2);
+}
+
+.pet-stat-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.pet-stat-icon { font-size: 1.2rem; }
+
+.pet-stat-label {
+  font-family: "Baloo 2", cursive;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  flex: 1;
+}
+
+.pet-stat-value {
+  font-family: "Baloo 2", cursive;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #48c980, #3ab0d6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pet-bar {
+  height: 10px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.pet-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 800ms cubic-bezier(0.22, 1, 0.36, 1);
+  width: 0%;
+}
+
+.strength-fill { background: linear-gradient(90deg, #48c980, #34d399); }
+.memory-fill { background: linear-gradient(90deg, #a78bfa, #818cf8); width: 0%; }
+.mood-fill { background: linear-gradient(90deg, #fbbf24, #f59e0b); width: 0%; }
+
+.pet-stat-desc {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  line-height: 1.35;
+}
+
+/* Training log */
+.pet-history {
+  max-width: 480px;
+  margin: 1.2rem auto 0;
+  padding: 0 1rem;
+}
+
+.pet-history h3 {
+  font-family: "Baloo 2", cursive;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--ink);
+}
+
+.pet-log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pet-log-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.7rem;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  border: 1px solid rgba(122, 183, 202, 0.15);
+  font-size: 0.85rem;
+}
+
+.pet-log-icon { font-size: 1rem; }
+.pet-log-text { color: var(--ink); font-weight: 600; }
+
+.pet-log-empty {
+  text-align: center;
+  color: var(--ink-soft);
+  font-style: italic;
+  padding: 1rem;
+}
+
+/* Pet tab mobile */
+@media (max-width: 740px) {
+  .pet-avatar { font-size: 3.5rem; }
+  .pet-name { font-size: 1.5rem; }
+  .pet-stats { padding: 0 0.5rem; }
+  .pet-stat { padding: 0.6rem 0.8rem; }
+  .pet-history { padding: 0 0.5rem; }
+  .tab-btn { font-size: 0.85rem; padding: 0.35rem 0.9rem; }
+}
