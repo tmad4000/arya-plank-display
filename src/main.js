@@ -19,6 +19,8 @@ let data = null;
 let monthOffset = 0;
 let activeTooltip = null;
 
+var TAB_ROUTES = { "/": "plank", "/plank": "plank", "/pet": "pet" };
+
 init();
 
 async function init() {
@@ -42,7 +44,6 @@ async function init() {
 }
 
 /* ---- Tabs ---- */
-var TAB_ROUTES = { "/": "plank", "/plank": "plank", "/pet": "pet" };
 
 function initTabs() {
   document.querySelectorAll(".tab-btn").forEach(function(btn) {
