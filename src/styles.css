@@ -233,7 +233,7 @@ h2 {
 }
 
 .status-done::after {
-  content: "✨";
+  content: "\2728";
   position: absolute;
   top: 2px;
   right: 4px;
@@ -580,7 +580,7 @@ h2 {
 
 .strength-fill { background: linear-gradient(90deg, #48c980, #34d399); }
 .memory-fill { background: linear-gradient(90deg, #a78bfa, #818cf8); width: 0%; }
-.mood-fill { background: linear-gradient(90deg, #fbbf24, #f59e0b); width: 0%; }
+.health-fill { background: linear-gradient(90deg, #48c980, #34d399); width: 0%; }
 
 .pet-stat-desc {
   margin: 0.35rem 0 0;
@@ -631,6 +631,155 @@ h2 {
   padding: 1rem;
 }
 
+/* ---- Expand/Collapse Toggle ---- */
+.pet-expand-toggle {
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 150ms ease, transform 150ms ease;
+  flex-shrink: 0;
+}
+
+.pet-expand-toggle:hover {
+  background: rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
+}
+
+.pet-expand-toggle.expanded {
+  background: rgba(72, 201, 128, 0.15);
+}
+
+.pet-expand-chevron {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  line-height: 1;
+  transition: transform 200ms ease;
+}
+
+.pet-expand-toggle.expanded .pet-expand-chevron {
+  transform: rotate(0deg);
+}
+
+/* ---- Expandable Details Container ---- */
+.pet-stat-details {
+  margin-top: 0.6rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(122, 183, 202, 0.15);
+  animation: details-in 250ms ease;
+}
+
+.pet-stat-details[hidden] {
+  display: none;
+}
+
+@keyframes details-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- SRS Item Rows ---- */
+.srs-item-row {
+  display: grid;
+  grid-template-columns: 2rem 2.5rem 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.4rem;
+  border-radius: 8px;
+  transition: background 150ms ease;
+}
+
+.srs-item-row:hover {
+  background: rgba(167, 139, 250, 0.08);
+}
+
+.srs-item-char {
+  font-size: 1.3rem;
+  text-align: center;
+  line-height: 1;
+}
+
+.srs-item-back {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.srs-item-retention {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: right;
+}
+
+.srs-item-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-green { background: #48c980; }
+.dot-amber { background: #f59e0b; }
+.dot-red { background: #ef4444; }
+
+/* ---- Health Checkup Rows ---- */
+.health-item-row {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 0.2rem 0.5rem;
+  padding: 0.4rem;
+  border-radius: 8px;
+  transition: background 150ms ease;
+}
+
+.health-item-row:hover {
+  background: rgba(72, 201, 128, 0.08);
+}
+
+.health-item-icon {
+  font-size: 1.1rem;
+  grid-row: 1 / 3;
+  text-align: center;
+}
+
+.health-item-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.health-item-last {
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+.health-item-urgency-bar {
+  grid-column: 2 / 4;
+  height: 5px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.health-item-urgency-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 600ms ease;
+}
+
+.urgency-green { background: linear-gradient(90deg, #48c980, #34d399); }
+.urgency-amber { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+.urgency-red { background: linear-gradient(90deg, #f87171, #ef4444); }
+
 /* Pet tab mobile */
 @media (max-width: 740px) {
   .pet-avatar { font-size: 3.5rem; }
@@ -639,4 +788,6 @@ h2 {
   .pet-stat { padding: 0.6rem 0.8rem; }
   .pet-history { padding: 0 0.5rem; }
   .tab-btn { font-size: 0.85rem; padding: 0.35rem 0.9rem; }
+  .srs-item-char { font-size: 1.1rem; }
+  .srs-item-row { gap: 0.35rem; }
 }

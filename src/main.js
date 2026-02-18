@@ -158,33 +158,52 @@ function renderPet() {
 
   var strength = calculateStrength(data.days);
   var strengthPct = Math.min(100, Math.max(0, Math.round(strength)));
+  var memoryPct = calculateMemory(data.srs);
+  var healthPct = calculateHealth(data.health);
 
-  // Avatar expression based on strength
+  // Avatar expression based on overall score
+  var overall = Math.round((strengthPct + memoryPct + healthPct) / 3);
   var avatarEl = document.getElementById("pet-avatar");
   var moodEl = document.getElementById("pet-mood");
+
+  if (overall >= 70) {
+    avatarEl.textContent = "\ud83d\udcaa\ud83d\ude3a";
+    moodEl.textContent = "Feeling strong and energized!";
+  } else if (overall >= 40) {
+    avatarEl.textContent = "\ud83d\ude3a";
+    moodEl.textContent = "Doing well! Keep it up.";
+  } else if (overall >= 15) {
+    avatarEl.textContent = "\ud83d\ude40";
+    moodEl.textContent = "Getting a bit rusty\u2026 time to train!";
+  } else {
+    avatarEl.textContent = "\ud83d\ude3f";
+    moodEl.textContent = "Needs attention! Stats are fading\u2026";
+  }
+
+  // Strength
+  renderStrength(strengthPct, data.days);
+
+  // Memory (SRS)
+  renderPetMemory(data.srs, memoryPct);
+
+  // Health
+  renderPetHealth(data.health, healthPct);
+
+  // Training log
+  renderTrainingLog(data.days);
+
+  // Expand/collapse handlers
+  initExpandToggles();
+}
+
+function renderStrength(strengthPct, days) {
   var strengthBar = document.getElementById("pet-strength-bar");
   var strengthVal = document.getElementById("pet-strength-val");
   var strengthDesc = document.getElementById("pet-strength-desc");
-  var petLog = document.getElementById("pet-log");
-
-  if (strengthPct >= 70) {
-    avatarEl.textContent = "\ud83d\udcaa\ud83d\ude3a";
-    moodEl.textContent = "Feeling strong and energized!";
-  } else if (strengthPct >= 40) {
-    avatarEl.textContent = "\ud83d\ude3a";
-    moodEl.textContent = "Doing well! Keep training.";
-  } else if (strengthPct >= 15) {
-    avatarEl.textContent = "\ud83d\ude40";
-    moodEl.textContent = "Getting a bit rusty\u2026 time to plank!";
-  } else {
-    avatarEl.textContent = "\ud83d\ude3f";
-    moodEl.textContent = "Needs training! Strength is fading\u2026";
-  }
 
   strengthBar.style.width = strengthPct + "%";
   strengthVal.textContent = strengthPct;
 
-  // Color the bar based on level
   if (strengthPct >= 70) {
     strengthBar.style.background = "linear-gradient(90deg, #48c980, #34d399)";
   } else if (strengthPct >= 40) {
@@ -193,8 +212,7 @@ function renderPet() {
     strengthBar.style.background = "linear-gradient(90deg, #f87171, #ef4444)";
   }
 
-  // Strength description with decay info
-  var daysSincePlank = getDaysSinceLastPlank(data.days);
+  var daysSincePlank = getDaysSinceLastPlank(days);
   if (daysSincePlank === 0) {
     strengthDesc.textContent = "Trained today! Strength is at peak.";
   } else if (daysSincePlank === 1) {
@@ -206,9 +224,11 @@ function renderPet() {
   } else {
     strengthDesc.textContent = "Last plank was " + daysSincePlank + " days ago. Significant atrophy!";
   }
+}
 
-  // Training log - recent plank events
-  var recentDays = data.days.filter(function(d) { return d.didPlank; }).slice(-5).reverse();
+function renderTrainingLog(days) {
+  var petLog = document.getElementById("pet-log");
+  var recentDays = days.filter(function(d) { return d.didPlank; }).slice(-5).reverse();
   if (recentDays.length === 0) {
     petLog.innerHTML = "<p class=\"pet-log-empty\">No training sessions yet. Do a plank!</p>";
   } else {
@@ -218,6 +238,130 @@ function renderPet() {
       return "<div class=\"pet-log-entry\"><span class=\"pet-log-icon\">\u2705</span><span class=\"pet-log-text\">" + label + (d.note ? " \u2014 " + d.note : "") + "</span></div>";
     }).join("");
   }
+}
+
+/* ---- Memory (SRS) ---- */
+function calculateMemory(srs) {
+  if (!srs || !srs.items || srs.items.length === 0) return 0;
+  return Math.max(0, Math.min(100, srs.aggregateRetention));
+}
+
+function renderPetMemory(srs, memoryPct) {
+  var memoryBar = document.getElementById("pet-memory-bar");
+  var memoryVal = document.getElementById("pet-memory-val");
+  var memoryDesc = document.getElementById("pet-memory-desc");
+  var memoryDetails = document.getElementById("pet-memory-details");
+
+  memoryBar.style.width = memoryPct + "%";
+  memoryVal.textContent = memoryPct;
+
+  if (memoryPct >= 70) {
+    memoryBar.style.background = "linear-gradient(90deg, #a78bfa, #818cf8)";
+  } else if (memoryPct >= 40) {
+    memoryBar.style.background = "linear-gradient(90deg, #fbbf24, #f59e0b)";
+  } else {
+    memoryBar.style.background = "linear-gradient(90deg, #f87171, #ef4444)";
+  }
+
+  if (!srs || !srs.items || srs.items.length === 0) {
+    memoryDesc.textContent = "No SRS items loaded.";
+    return;
+  }
+
+  var reviewed = srs.items.filter(function(item) { return item.lastReview; }).length;
+  memoryDesc.textContent = reviewed + "/" + srs.items.length + " items reviewed. " +
+    (memoryPct === 0 ? "Start reviewing to build memory!" : "Aggregate retention: " + memoryPct + "%");
+
+  // Sort by lowest retention first
+  var sorted = srs.items.slice().sort(function(a, b) { return a.retention - b.retention; });
+  var rows = sorted.map(function(item) {
+    var retPct = Math.round(item.retention * 100);
+    var dotClass = retPct >= 70 ? "dot-green" : (retPct >= 40 ? "dot-amber" : "dot-red");
+    return "<div class=\"srs-item-row\">" +
+      "<span class=\"srs-item-char\">" + item.front + "</span>" +
+      "<span class=\"srs-item-back\">" + item.back + "</span>" +
+      "<span class=\"srs-item-retention\">" + retPct + "%</span>" +
+      "<span class=\"srs-item-dot " + dotClass + "\"></span>" +
+      "</div>";
+  });
+  memoryDetails.innerHTML = rows.join("");
+}
+
+/* ---- Health ---- */
+function calculateHealth(health) {
+  if (!health || !health.checkups || health.checkups.length === 0) return 0;
+  return Math.max(0, Math.min(100, health.aggregateScore));
+}
+
+function renderPetHealth(health, healthPct) {
+  var healthBar = document.getElementById("pet-health-bar");
+  var healthVal = document.getElementById("pet-health-val");
+  var healthDesc = document.getElementById("pet-health-desc");
+  var healthDetails = document.getElementById("pet-health-details");
+
+  healthBar.style.width = healthPct + "%";
+  healthVal.textContent = healthPct;
+
+  if (healthPct >= 70) {
+    healthBar.style.background = "linear-gradient(90deg, #48c980, #34d399)";
+  } else if (healthPct >= 40) {
+    healthBar.style.background = "linear-gradient(90deg, #fbbf24, #f59e0b)";
+  } else {
+    healthBar.style.background = "linear-gradient(90deg, #f87171, #ef4444)";
+  }
+
+  if (!health || !health.checkups || health.checkups.length === 0) {
+    healthDesc.textContent = "No health checkups tracked.";
+    return;
+  }
+
+  var overdue = health.checkups.filter(function(c) { return c.urgency > 0.5; }).length;
+  healthDesc.textContent = overdue > 0
+    ? overdue + " checkup" + (overdue > 1 ? "s" : "") + " need attention. Health score: " + healthPct + "%"
+    : "All checkups on track! Health score: " + healthPct + "%";
+
+  // Sort by highest urgency first
+  var sorted = health.checkups.slice().sort(function(a, b) { return b.urgency - a.urgency; });
+  var rows = sorted.map(function(checkup) {
+    var urgPct = Math.round(checkup.urgency * 100);
+    var statusClass = urgPct <= 30 ? "urgency-green" : (urgPct <= 60 ? "urgency-amber" : "urgency-red");
+    var lastText = checkup.lastCompleted || "Never";
+    return "<div class=\"health-item-row\">" +
+      "<span class=\"health-item-icon\">" + checkup.icon + "</span>" +
+      "<span class=\"health-item-label\">" + checkup.label + "</span>" +
+      "<span class=\"health-item-last\">Last: " + lastText + "</span>" +
+      "<div class=\"health-item-urgency-bar\">" +
+        "<div class=\"health-item-urgency-fill " + statusClass + "\" style=\"width:" + urgPct + "%\"></div>" +
+      "</div>" +
+      "</div>";
+  });
+  healthDetails.innerHTML = rows.join("");
+}
+
+/* ---- Expand/Collapse ---- */
+function initExpandToggles() {
+  setupToggle("pet-memory-toggle", "pet-memory-details");
+  setupToggle("pet-health-toggle", "pet-health-details");
+}
+
+function setupToggle(toggleId, detailsId) {
+  var toggle = document.getElementById(toggleId);
+  var details = document.getElementById(detailsId);
+  if (!toggle || !details) return;
+
+  // Remove old listeners by cloning
+  var newToggle = toggle.cloneNode(true);
+  toggle.parentNode.replaceChild(newToggle, toggle);
+
+  newToggle.addEventListener("click", function() {
+    var isExpanded = !details.hidden;
+    details.hidden = isExpanded;
+    var chevron = newToggle.querySelector(".pet-expand-chevron");
+    if (chevron) {
+      chevron.textContent = isExpanded ? "\u25b8" : "\u25be";
+    }
+    newToggle.classList.toggle("expanded", !isExpanded);
+  });
 }
 
 /**

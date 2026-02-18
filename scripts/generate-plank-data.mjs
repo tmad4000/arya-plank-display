@@ -41,18 +41,110 @@ const endDate = maxDate([today, ...allDates]);
 const days = buildDayRange(startDate, endDate, entries, today);
 const summary = computeSummary(days, today);
 
+// Read SRS items
+const srsPath = path.join(inputDir, 'srs-items.json');
+const srsItems = fs.existsSync(srsPath)
+  ? JSON.parse(fs.readFileSync(srsPath, 'utf8'))
+  : [];
+
+// Read health checkups
+const healthPath = path.join(inputDir, 'health-checkups.json');
+const healthCheckups = fs.existsSync(healthPath)
+  ? JSON.parse(fs.readFileSync(healthPath, 'utf8'))
+  : [];
+
+// Compute SRS and health data
+const srs = computeSrsRetention(srsItems, today);
+const health = computeHealthUrgency(healthCheckups, today);
+
 const payload = {
   generatedAt: new Date().toISOString(),
   currentStatus,
   dateRange: { start: startDate, end: endDate },
   summary,
-  days
+  days,
+  srs,
+  health
 };
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8');
 
 console.log(`Wrote ${outputPath}`);
+
+/* ---- SRS Retention ---- */
+function computeSrsRetention(items, todayDate) {
+  if (!items.length) {
+    return { items: [], aggregateRetention: 0 };
+  }
+
+  const computed = items.map(function (item) {
+    let retention = 0;
+
+    if (item.lastReview) {
+      const elapsed = daysBetween(item.lastReview, todayDate);
+      // Forgetting curve: retention = e^(-t/S)
+      retention = Math.exp(-elapsed / item.stability);
+    }
+    // If never reviewed, retention stays 0
+
+    return {
+      ...item,
+      retention: Math.round(retention * 1000) / 1000
+    };
+  });
+
+  const totalRetention = computed.reduce(function (sum, item) {
+    return sum + item.retention;
+  }, 0);
+  const aggregateRetention = Math.round((totalRetention / computed.length) * 100);
+
+  return {
+    items: computed,
+    aggregateRetention
+  };
+}
+
+/* ---- Health Urgency ---- */
+function computeHealthUrgency(checkups, todayDate) {
+  if (!checkups.length) {
+    return { checkups: [], aggregateScore: 0 };
+  }
+
+  const computed = checkups.map(function (checkup) {
+    let urgency = 1.0; // Default: fully urgent if never completed
+
+    if (checkup.lastCompleted) {
+      const elapsed = daysBetween(checkup.lastCompleted, todayDate);
+      const k = checkup.steepness || 6;
+      // Sigmoid urgency: 1 / (1 + e^(-k * (elapsed/interval - 1)))
+      urgency = 1 / (1 + Math.exp(-k * (elapsed / checkup.intervalDays - 1)));
+    }
+
+    return {
+      ...checkup,
+      urgency: Math.round(urgency * 1000) / 1000
+    };
+  });
+
+  const totalUrgency = computed.reduce(function (sum, item) {
+    return sum + item.urgency;
+  }, 0);
+  const avgUrgency = totalUrgency / computed.length;
+  const aggregateScore = Math.round((1 - avgUrgency) * 100);
+
+  return {
+    checkups: computed,
+    aggregateScore
+  };
+}
+
+/* ---- Utility ---- */
+function daysBetween(dateA, dateB) {
+  const a = new Date(`${dateA}T00:00:00Z`);
+  const b = new Date(`${dateB}T00:00:00Z`);
+  return Math.abs(b - a) / (1000 * 60 * 60 * 24);
+}
 
 function resolveInputDir() {
   const candidates = [

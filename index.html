@@ -41,18 +41,18 @@
 
         <section class="calendar-wrap" aria-label="Plank calendar">
           <div class="calendar-header">
-            <button id="prev-month" class="month-button" aria-label="Previous month">←</button>
+            <button id="prev-month" class="month-button" aria-label="Previous month">&#8592;</button>
             <h2 id="month-title">Month</h2>
-            <button id="next-month" class="month-button" aria-label="Next month">→</button>
+            <button id="next-month" class="month-button" aria-label="Next month">&#8594;</button>
           </div>
           <div class="day-headings" id="day-headings"></div>
           <div class="calendar-grid" id="calendar-grid"></div>
         </section>
 
         <section class="legend" aria-label="Legend">
-          <p><span class="pill done">✅ Done</span></p>
-          <p><span class="pill rest">🌿 Rest day</span></p>
-          <p><span class="pill muted">◻ Missed/Future</span></p>
+          <p><span class="pill done">&#x2705; Done</span></p>
+          <p><span class="pill rest">&#x1F33F; Rest day</span></p>
+          <p><span class="pill muted">&#x25FB; Missed/Future</span></p>
         </section>
       </div>
 
@@ -65,9 +65,10 @@
         </div>
 
         <div class="pet-stats">
+          <!-- Strength -->
           <div class="pet-stat">
             <div class="pet-stat-header">
-              <span class="pet-stat-icon">💪</span>
+              <span class="pet-stat-icon">&#x1F4AA;</span>
               <span class="pet-stat-label">Strength</span>
               <span class="pet-stat-value" id="pet-strength-val">0</span>
             </div>
@@ -77,28 +78,38 @@
             <p class="pet-stat-desc" id="pet-strength-desc">Builds with each plank. Atrophies over time without training.</p>
           </div>
 
+          <!-- Memory (SRS) -->
           <div class="pet-stat">
             <div class="pet-stat-header">
-              <span class="pet-stat-icon">🧠</span>
+              <span class="pet-stat-icon">&#x1F9E0;</span>
               <span class="pet-stat-label">Memory</span>
-              <span class="pet-stat-value" id="pet-memory-val">—</span>
+              <span class="pet-stat-value" id="pet-memory-val">&mdash;</span>
+              <button class="pet-expand-toggle" id="pet-memory-toggle" aria-label="Expand memory details">
+                <span class="pet-expand-chevron">&#x25B8;</span>
+              </button>
             </div>
             <div class="pet-bar">
               <div class="pet-bar-fill memory-fill" id="pet-memory-bar"></div>
             </div>
-            <p class="pet-stat-desc">Memories of special moments. Coming soon…</p>
+            <p class="pet-stat-desc" id="pet-memory-desc">Spaced repetition for Japanese hiragana.</p>
+            <div class="pet-stat-details" id="pet-memory-details" hidden></div>
           </div>
 
+          <!-- Health -->
           <div class="pet-stat">
             <div class="pet-stat-header">
-              <span class="pet-stat-icon">🌟</span>
-              <span class="pet-stat-label">Mood</span>
-              <span class="pet-stat-value" id="pet-mood-val">—</span>
+              <span class="pet-stat-icon">&#x1F3E5;</span>
+              <span class="pet-stat-label">Health</span>
+              <span class="pet-stat-value" id="pet-health-val">&mdash;</span>
+              <button class="pet-expand-toggle" id="pet-health-toggle" aria-label="Expand health details">
+                <span class="pet-expand-chevron">&#x25B8;</span>
+              </button>
             </div>
             <div class="pet-bar">
-              <div class="pet-bar-fill mood-fill" id="pet-mood-bar"></div>
+              <div class="pet-bar-fill health-fill" id="pet-health-bar"></div>
             </div>
-            <p class="pet-stat-desc">Inferred from conversations. Coming soon…</p>
+            <p class="pet-stat-desc" id="pet-health-desc">Medical checkup urgency tracker.</p>
+            <div class="pet-stat-details" id="pet-health-details" hidden></div>
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-18T17:09:20.053Z",
+  "generatedAt": "2026-02-18T17:55:29.157Z",
   "currentStatus": {
     "date": "2026-02-18",
     "confirmed": false
@@ -42,5 +42,101 @@
       "note": null,
       "source": "status"
     }
-  ]
+  ],
+  "srs": {
+    "items": [
+      {
+        "id": "hira-a",
+        "category": "hiragana",
+        "front": "あ",
+        "back": "a",
+        "stability": 1,
+        "lastReview": null,
+        "reviewCount": 0,
+        "retention": 0
+      },
+      {
+        "id": "hira-i",
+        "category": "hiragana",
+        "front": "い",
+        "back": "i",
+        "stability": 1,
+        "lastReview": null,
+        "reviewCount": 0,
+        "retention": 0
+      },
+      {
+        "id": "hira-u",
+        "category": "hiragana",
+        "front": "う",
+        "back": "u",
+        "stability": 1,
+        "lastReview": null,
+        "reviewCount": 0,
+        "retention": 0
+      },
+      {
+        "id": "hira-e",
+        "category": "hiragana",
+        "front": "え",
+        "back": "e",
+        "stability": 1,
+        "lastReview": null,
+        "reviewCount": 0,
+        "retention": 0
+      },
+      {
+        "id": "hira-o",
+        "category": "hiragana",
+        "front": "お",
+        "back": "o",
+        "stability": 1,
+        "lastReview": null,
+        "reviewCount": 0,
+        "retention": 0
+      }
+    ],
+    "aggregateRetention": 0
+  },
+  "health": {
+    "checkups": [
+      {
+        "id": "dentist",
+        "label": "Dentist",
+        "icon": "🦷",
+        "intervalDays": 180,
+        "lastCompleted": null,
+        "steepness": 8,
+        "urgency": 1
+      },
+      {
+        "id": "eye-exam",
+        "label": "Eye Exam",
+        "icon": "👁️",
+        "intervalDays": 365,
+        "lastCompleted": null,
+        "steepness": 6,
+        "urgency": 1
+      },
+      {
+        "id": "annual-physical",
+        "label": "Annual Physical",
+        "icon": "🩺",
+        "intervalDays": 365,
+        "lastCompleted": null,
+        "steepness": 6,
+        "urgency": 1
+      },
+      {
+        "id": "dermatologist",
+        "label": "Dermatologist",
+        "icon": "🔬",
+        "intervalDays": 365,
+        "lastCompleted": null,
+        "steepness": 5,
+        "urgency": 1
+      }
+    ],
+    "aggregateScore": 0
+  }
 }
