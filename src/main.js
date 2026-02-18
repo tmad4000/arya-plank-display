@@ -42,16 +42,43 @@ async function init() {
 }
 
 /* ---- Tabs ---- */
+var TAB_ROUTES = { "/": "plank", "/plank": "plank", "/pet": "pet" };
+
 function initTabs() {
   document.querySelectorAll(".tab-btn").forEach(function(btn) {
     btn.addEventListener("click", function() {
       var tab = btn.dataset.tab;
-      document.querySelectorAll(".tab-btn").forEach(function(b) { b.classList.remove("active"); });
-      document.querySelectorAll(".tab-panel").forEach(function(p) { p.classList.remove("active"); });
-      btn.classList.add("active");
-      document.getElementById("tab-" + tab).classList.add("active");
+      switchTab(tab);
+      var path = tab === "plank" ? "/" : "/" + tab;
+      history.pushState({ tab: tab }, "", path);
     });
   });
+
+  window.addEventListener("popstate", function(e) {
+    var tab = (e.state && e.state.tab) || tabFromPath();
+    switchTab(tab);
+  });
+
+  // Activate tab from current URL on load
+  var initialTab = tabFromPath();
+  if (initialTab !== "plank") {
+    switchTab(initialTab);
+    history.replaceState({ tab: initialTab }, "", window.location.pathname);
+  }
+}
+
+function tabFromPath() {
+  var path = window.location.pathname.replace(/\/+$/, "") || "/";
+  return TAB_ROUTES[path] || "plank";
+}
+
+function switchTab(tab) {
+  document.querySelectorAll(".tab-btn").forEach(function(b) { b.classList.remove("active"); });
+  document.querySelectorAll(".tab-panel").forEach(function(p) { p.classList.remove("active"); });
+  var btn = document.querySelector(".tab-btn[data-tab=\"" + tab + "\"]");
+  if (btn) btn.classList.add("active");
+  var panel = document.getElementById("tab-" + tab);
+  if (panel) panel.classList.add("active");
 }
 
 /* ---- Navigation ---- */
