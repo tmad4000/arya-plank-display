@@ -113,6 +113,41 @@
           </div>
         </div>
 
+          <!-- Sleep -->
+          <div class="pet-stat">
+            <div class="pet-stat-header">
+              <span class="pet-stat-icon">&#x1F634;</span>
+              <span class="pet-stat-label">Sleep</span>
+              <span class="pet-stat-value" id="pet-sleep-val">&mdash;</span>
+              <button class="pet-expand-toggle" id="pet-sleep-toggle" aria-label="Expand sleep details">
+                <span class="pet-expand-chevron">&#x25B8;</span>
+              </button>
+            </div>
+            <div class="pet-bar">
+              <div class="pet-bar-fill sleep-fill" id="pet-sleep-bar"></div>
+            </div>
+            <p class="pet-stat-desc" id="pet-sleep-desc">7-day rolling sleep quality vs 8h target.</p>
+            <div class="pet-stat-details" id="pet-sleep-details" hidden></div>
+          </div>
+
+          <!-- Play -->
+          <div class="pet-stat">
+            <div class="pet-stat-header">
+              <span class="pet-stat-icon">&#x1F3BE;</span>
+              <span class="pet-stat-label">Play</span>
+              <span class="pet-stat-value" id="pet-play-val">&mdash;</span>
+              <button class="pet-expand-toggle" id="pet-play-toggle" aria-label="Expand play details">
+                <span class="pet-expand-chevron">&#x25B8;</span>
+              </button>
+            </div>
+            <div class="pet-bar">
+              <div class="pet-bar-fill play-fill" id="pet-play-bar"></div>
+            </div>
+            <p class="pet-stat-desc" id="pet-play-desc">Weekly active minutes vs 150min target.</p>
+            <div class="pet-stat-details" id="pet-play-details" hidden></div>
+          </div>
+        </div>
+
         <div class="pet-history" id="pet-history">
           <h3>Training Log</h3>
           <div class="pet-log" id="pet-log"></div>

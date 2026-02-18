@@ -53,9 +53,23 @@ const healthCheckups = fs.existsSync(healthPath)
   ? JSON.parse(fs.readFileSync(healthPath, 'utf8'))
   : [];
 
+// Read sleep log
+const sleepPath = path.join(inputDir, 'sleep-log.json');
+const sleepEntries = fs.existsSync(sleepPath)
+  ? JSON.parse(fs.readFileSync(sleepPath, 'utf8'))
+  : [];
+
+// Read play log
+const playPath = path.join(inputDir, 'play-log.json');
+const playEntries = fs.existsSync(playPath)
+  ? JSON.parse(fs.readFileSync(playPath, 'utf8'))
+  : [];
+
 // Compute SRS and health data
 const srs = computeSrsRetention(srsItems, today);
 const health = computeHealthUrgency(healthCheckups, today);
+const sleep = computeSleepScore(sleepEntries, today);
+const play = computePlayScore(playEntries, today);
 
 const payload = {
   generatedAt: new Date().toISOString(),
@@ -64,7 +78,9 @@ const payload = {
   summary,
   days,
   srs,
-  health
+  health,
+  sleep,
+  play
 };
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
@@ -136,6 +152,76 @@ function computeHealthUrgency(checkups, todayDate) {
   return {
     checkups: computed,
     aggregateScore
+  };
+}
+
+/* ---- Sleep Score ---- */
+function computeSleepScore(entries, todayDate) {
+  if (!entries.length) {
+    return { entries: [], aggregateScore: 0, avgHours: 0, loggedDays: 0 };
+  }
+
+  const TARGET_HOURS = 8;
+  const WINDOW_DAYS = 7;
+
+  // Get last 7 days
+  const windowStart = new Date(`${todayDate}T00:00:00Z`);
+  windowStart.setUTCDate(windowStart.getUTCDate() - WINDOW_DAYS + 1);
+  const windowStartStr = windowStart.toISOString().slice(0, 10);
+
+  const recent = entries.filter(function (e) {
+    return e.date >= windowStartStr && e.date <= todayDate;
+  });
+
+  const totalHours = recent.reduce(function (sum, e) { return sum + (e.hours || 0); }, 0);
+  const avgHours = recent.length > 0 ? totalHours / recent.length : 0;
+
+  // Score each logged day: how close to target (8h)
+  const dayScores = recent.map(function (e) {
+    var deviation = Math.abs((e.hours || 0) - TARGET_HOURS) / TARGET_HOURS;
+    return Math.max(0, 1 - deviation);
+  });
+
+  // Penalize missing days in window
+  var totalScore = dayScores.reduce(function (sum, s) { return sum + s; }, 0);
+  var aggregateScore = Math.round((totalScore / WINDOW_DAYS) * 100);
+
+  return {
+    entries: recent,
+    aggregateScore: aggregateScore,
+    avgHours: Math.round(avgHours * 10) / 10,
+    loggedDays: recent.length
+  };
+}
+
+/* ---- Play Score ---- */
+function computePlayScore(entries, todayDate) {
+  if (!entries.length) {
+    return { entries: [], aggregateScore: 0, totalMinutes: 0, activeDays: 0 };
+  }
+
+  const WINDOW_DAYS = 7;
+  const TARGET_MINUTES_PER_WEEK = 150; // WHO recommendation
+
+  const windowStart = new Date(`${todayDate}T00:00:00Z`);
+  windowStart.setUTCDate(windowStart.getUTCDate() - WINDOW_DAYS + 1);
+  const windowStartStr = windowStart.toISOString().slice(0, 10);
+
+  const recent = entries.filter(function (e) {
+    return e.date >= windowStartStr && e.date <= todayDate;
+  });
+
+  const totalMinutes = recent.reduce(function (sum, e) { return sum + (e.minutes || 0); }, 0);
+  const uniqueDays = new Set(recent.map(function (e) { return e.date; })).size;
+
+  // Score: minutes logged / target, capped at 100
+  var aggregateScore = Math.min(100, Math.round((totalMinutes / TARGET_MINUTES_PER_WEEK) * 100));
+
+  return {
+    entries: recent,
+    aggregateScore: aggregateScore,
+    totalMinutes: totalMinutes,
+    activeDays: uniqueDays
   };
 }
 

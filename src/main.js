@@ -187,9 +187,11 @@ function renderPet() {
   var strengthPct = Math.min(100, Math.max(0, Math.round(strength)));
   var memoryPct = calculateMemory(data.srs);
   var healthPct = calculateHealth(data.health);
+  var sleepPct = calculateSleep(data.sleep);
+  var playPct = calculatePlay(data.play);
 
-  // Avatar expression based on overall score
-  var overall = Math.round((strengthPct + memoryPct + healthPct) / 3);
+  // Avatar expression based on overall score (all 5 stats)
+  var overall = Math.round((strengthPct + memoryPct + healthPct + sleepPct + playPct) / 5);
   var avatarEl = document.getElementById("pet-avatar");
   var moodEl = document.getElementById("pet-mood");
 
@@ -216,11 +218,20 @@ function renderPet() {
   // Health
   renderPetHealth(data.health, healthPct);
 
+  // Sleep
+  renderPetSleep(data.sleep, sleepPct);
+
+  // Play
+  renderPetPlay(data.play, playPct);
+
   // Training log
   renderTrainingLog(data.days);
 
   // Expand/collapse handlers
-  initExpandToggles();
+  initExpandToggles("pet-memory-toggle", "pet-memory-details");
+  initExpandToggles("pet-health-toggle", "pet-health-details");
+  initExpandToggles("pet-sleep-toggle", "pet-sleep-details");
+  initExpandToggles("pet-play-toggle", "pet-play-details");
 }
 
 function renderStrength(strengthPct, days) {
@@ -365,13 +376,96 @@ function renderPetHealth(health, healthPct) {
   healthDetails.innerHTML = rows.join("");
 }
 
-/* ---- Expand/Collapse ---- */
-function initExpandToggles() {
-  setupToggle("pet-memory-toggle", "pet-memory-details");
-  setupToggle("pet-health-toggle", "pet-health-details");
+/* ---- Sleep ---- */
+function calculateSleep(sleep) {
+  if (!sleep || !sleep.entries || sleep.entries.length === 0) return 0;
+  return Math.max(0, Math.min(100, sleep.aggregateScore));
 }
 
-function setupToggle(toggleId, detailsId) {
+function renderPetSleep(sleep, sleepPct) {
+  var sleepBar = document.getElementById("pet-sleep-bar");
+  var sleepVal = document.getElementById("pet-sleep-val");
+  var sleepDesc = document.getElementById("pet-sleep-desc");
+  var sleepDetails = document.getElementById("pet-sleep-details");
+
+  sleepBar.style.width = sleepPct + "%";
+  sleepVal.textContent = sleepPct;
+
+  if (sleepPct >= 70) {
+    sleepBar.style.background = "linear-gradient(90deg, #6366f1, #818cf8)";
+  } else if (sleepPct >= 40) {
+    sleepBar.style.background = "linear-gradient(90deg, #fbbf24, #f59e0b)";
+  } else {
+    sleepBar.style.background = "linear-gradient(90deg, #f87171, #ef4444)";
+  }
+
+  if (!sleep || !sleep.entries || sleep.entries.length === 0) {
+    sleepDesc.textContent = "No sleep data logged yet.";
+    return;
+  }
+
+  sleepDesc.textContent = sleep.loggedDays + "/7 nights logged. Avg: " + sleep.avgHours + "h (target: 8h)";
+
+  var sorted = sleep.entries.slice().sort(function(a, b) { return b.date.localeCompare(a.date); });
+  var rows = sorted.map(function(entry) {
+    var dt = new Date(entry.date + "T12:00:00");
+    var label = dt.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    var note = entry.note ? " - " + entry.note : "";
+    return "<div class=\"sleep-item-row\">" +
+      "<span class=\"sleep-item-date\">" + label + "</span>" +
+      "<span class=\"sleep-item-hours\">" + entry.hours + "h</span>" +
+      "<span class=\"sleep-item-note\">" + note + "</span>" +
+      "</div>";
+  });
+  sleepDetails.innerHTML = rows.join("");
+}
+
+/* ---- Play ---- */
+function calculatePlay(play) {
+  if (!play || !play.entries || play.entries.length === 0) return 0;
+  return Math.max(0, Math.min(100, play.aggregateScore));
+}
+
+function renderPetPlay(play, playPct) {
+  var playBar = document.getElementById("pet-play-bar");
+  var playVal = document.getElementById("pet-play-val");
+  var playDesc = document.getElementById("pet-play-desc");
+  var playDetails = document.getElementById("pet-play-details");
+
+  playBar.style.width = playPct + "%";
+  playVal.textContent = playPct;
+
+  if (playPct >= 70) {
+    playBar.style.background = "linear-gradient(90deg, #f472b6, #ec4899)";
+  } else if (playPct >= 40) {
+    playBar.style.background = "linear-gradient(90deg, #fbbf24, #f59e0b)";
+  } else {
+    playBar.style.background = "linear-gradient(90deg, #f87171, #ef4444)";
+  }
+
+  if (!play || !play.entries || play.entries.length === 0) {
+    playDesc.textContent = "No play/exercise logged yet.";
+    return;
+  }
+
+  playDesc.textContent = play.totalMinutes + " min across " + play.activeDays +
+    " day" + (play.activeDays !== 1 ? "s" : "") + " this week (target: 150 min)";
+
+  var sorted = play.entries.slice().sort(function(a, b) { return b.date.localeCompare(a.date); });
+  var rows = sorted.map(function(entry) {
+    var dt = new Date(entry.date + "T12:00:00");
+    var label = dt.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    return "<div class=\"play-item-row\">" +
+      "<span class=\"play-item-date\">" + label + "</span>" +
+      "<span class=\"play-item-activity\">" + entry.activity + "</span>" +
+      "<span class=\"play-item-minutes\">" + entry.minutes + " min</span>" +
+      "</div>";
+  });
+  playDetails.innerHTML = rows.join("");
+}
+
+/* ---- Expand/Collapse ---- */
+function initExpandToggles(toggleId, detailsId) {
   var toggle = document.getElementById(toggleId);
   var details = document.getElementById(detailsId);
   if (!toggle || !details) return;

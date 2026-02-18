@@ -1,17 +1,18 @@
 {
-  "generatedAt": "2026-02-18T17:55:29.157Z",
+  "generatedAt": "2026-02-18T18:38:54.579Z",
   "currentStatus": {
     "date": "2026-02-18",
-    "confirmed": false
+    "confirmed": true,
+    "time": "10:59"
   },
   "dateRange": {
     "start": "2026-02-16",
     "end": "2026-02-18"
   },
   "summary": {
-    "currentStreak": 1,
-    "longestStreak": 1,
-    "totalPlanks": 1,
+    "currentStreak": 2,
+    "longestStreak": 2,
+    "totalPlanks": 2,
     "trackedDays": 3
   },
   "days": [
@@ -35,9 +36,9 @@
     },
     {
       "date": "2026-02-18",
-      "status": "pending",
-      "didPlank": false,
-      "keepsStreak": false,
+      "status": "done",
+      "didPlank": true,
+      "keepsStreak": true,
       "isFuture": false,
       "note": null,
       "source": "status"
@@ -138,5 +139,41 @@
       }
     ],
     "aggregateScore": 0
+  },
+  "sleep": {
+    "entries": [
+      {
+        "date": "2026-02-17",
+        "hours": 7.5,
+        "note": null
+      },
+      {
+        "date": "2026-02-18",
+        "hours": 6.5,
+        "note": "Late night"
+      }
+    ],
+    "aggregateScore": 25,
+    "avgHours": 7,
+    "loggedDays": 2
+  },
+  "play": {
+    "entries": [
+      {
+        "date": "2026-02-16",
+        "activity": "basketball",
+        "minutes": 60,
+        "note": null
+      },
+      {
+        "date": "2026-02-18",
+        "activity": "walk",
+        "minutes": 30,
+        "note": "Morning walk"
+      }
+    ],
+    "aggregateScore": 60,
+    "totalMinutes": 90,
+    "activeDays": 2
   }
 }

@@ -581,6 +581,8 @@ h2 {
 .strength-fill { background: linear-gradient(90deg, #48c980, #34d399); }
 .memory-fill { background: linear-gradient(90deg, #a78bfa, #818cf8); width: 0%; }
 .health-fill { background: linear-gradient(90deg, #48c980, #34d399); width: 0%; }
+.sleep-fill { background: linear-gradient(90deg, #6366f1, #818cf8); width: 0%; }
+.play-fill { background: linear-gradient(90deg, #f472b6, #ec4899); width: 0%; }
 
 .pet-stat-desc {
   margin: 0.35rem 0 0;
@@ -779,6 +781,42 @@ h2 {
 .urgency-green { background: linear-gradient(90deg, #48c980, #34d399); }
 .urgency-amber { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
 .urgency-red { background: linear-gradient(90deg, #f87171, #ef4444); }
+
+/* ---- Sleep Log Rows ---- */
+.sleep-item-row {
+  display: grid;
+  grid-template-columns: 5rem 1fr auto;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  transition: background 150ms ease;
+}
+
+.sleep-item-row:hover { background: rgba(99, 102, 241, 0.08); }
+
+.sleep-item-date { color: var(--ink-soft); font-weight: 600; }
+.sleep-item-hours { font-weight: 700; color: var(--ink); }
+.sleep-item-note { color: var(--ink-soft); font-size: 0.75rem; }
+
+/* ---- Play Log Rows ---- */
+.play-item-row {
+  display: grid;
+  grid-template-columns: 5rem 1fr auto;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  transition: background 150ms ease;
+}
+
+.play-item-row:hover { background: rgba(244, 114, 182, 0.08); }
+
+.play-item-date { color: var(--ink-soft); font-weight: 600; }
+.play-item-activity { font-weight: 700; color: var(--ink); text-transform: capitalize; }
+.play-item-minutes { color: var(--ink-soft); font-weight: 600; }
 
 /* Pet tab mobile */
 @media (max-width: 740px) {
